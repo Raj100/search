@@ -4,15 +4,38 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import googleLogo from "../assets/images/GoogleLogo.png";
 import Navbar from '@/components/Navbar/Navbar';
+import Footer from "../components/Footer/Footer";
 import { useSelector, useDispatch } from 'react-redux';
-import Footer from "../components/Footer/Footer"
+import { fetchSuggestions, setSuggestions } from '../redux/slices/autocompleteSlice';
+import { RootState, AppDispatch } from '../redux/store';
 
-const Home = () => {
+const Home: React.FC = () => {
+  const [inputValue, setInputValue] = useState<string>('');
+  const dispatch = useDispatch<AppDispatch>();
+  const suggestions = useSelector((state: RootState) => state.autocomplete.suggestions);
+  const loading = useSelector((state: RootState) => state.autocomplete.loading);
+
+  useEffect(() => {
+    if (inputValue) {
+      dispatch(fetchSuggestions(inputValue));
+    } else {
+      dispatch(setSuggestions([]));
+    }
+  }, [inputValue, dispatch]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInputValue(suggestion);
+    dispatch(setSuggestions([]));
+  };
 
   return (
     <div className="font-roboto flex flex-col min-h-screen bg-white text-black dark:bg-darkbg dark:text-white">
-      <Navbar></Navbar>
-      <main className="flex flex-col  items-center justify-center grow">
+      <Navbar />
+      <main className="flex flex-col items-center justify-center grow">
         <Image 
           src={googleLogo} 
           alt="Google" 
@@ -24,15 +47,32 @@ const Home = () => {
         <div className="relative w-full max-w-lg">
           <input
             type="text"
+            value={inputValue}
+            onChange={handleInputChange}
             placeholder="Search Google or type a URL"
             className="w-full px-4 py-2 border rounded-full focus:outline-none bg-white border-gray-300 text-black dark:bg-gray-800 dark:border-gray-700 dark:text-white"
           />
-        </div>
-        <div>
-          
+          {loading && (
+            <div className="absolute w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-700">
+              <p className="px-4 py-2 text-gray-500 dark:text-gray-400">Loading...</p>
+            </div>
+          )}
+          {suggestions.length > 0 && !loading && (
+            <ul className="absolute w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-700">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </main>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 };

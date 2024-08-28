@@ -14,9 +14,9 @@ const Footer = () => {
           <div>How Search works</div>
         </div>
         <div className='flex space-x-4 pr-4'>     
-        <div>Privacy</div>
-        <div>Terms</div>
-        <div>Settings</div>
+        <a href=''>Privacy</a>
+        <a href=''>Terms</a>
+        <a href=''>Settings</a>
         </div>   
       </div>
     </div>
