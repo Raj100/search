@@ -3,10 +3,12 @@
 import { configureStore, combineReducers, Action, ThunkAction } from '@reduxjs/toolkit';
 import themeReducer from './slices/themeSlice';
 import autocompleteReducer from './slices/autocompleteSlice';
+import searchReducer from './slices/searchSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
   autocomplete: autocompleteReducer,
+  search: searchReducer,
 });
 
 export const store = configureStore({

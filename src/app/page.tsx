@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import googleLogo from "../assets/images/GoogleLogo.png";
 import Navbar from '@/components/Navbar/Navbar';
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const suggestions = useSelector((state: RootState) => state.autocomplete.suggestions);
   const loading = useSelector((state: RootState) => state.autocomplete.loading);
+  const router = useRouter();
 
   useEffect(() => {
     if (inputValue) {
@@ -28,8 +30,21 @@ const Home: React.FC = () => {
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setInputValue(suggestion);
+    setInputValue(suggestion.name);
     dispatch(setSuggestions([]));
+    router.push(`/search?q=${encodeURIComponent(suggestion.name)}&id=${encodeURIComponent(suggestion.id)}`);
+  };
+
+  const handleSearch = () => {
+    if (inputValue.trim()) {
+      router.push(`/search?q=${encodeURIComponent(inputValue.trim())}&id=${encodeURIComponent(suggestion.id)}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -44,11 +59,12 @@ const Home: React.FC = () => {
           priority 
           className="mb-8"
         />
-        <div className="relative w-full max-w-lg">
+        <div className="relative w-full max-w-lg px-4">
           <input
             type="text"
             value={inputValue}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder="Search Google or type a URL"
             className="w-full px-4 py-2 border rounded-full focus:outline-none bg-white border-gray-300 text-black dark:bg-gray-800 dark:border-gray-700 dark:text-white"
           />
@@ -65,7 +81,7 @@ const Home: React.FC = () => {
                   onClick={() => handleSuggestionClick(suggestion)}
                   className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
-                  {suggestion}
+                  {suggestion.name}
                 </li>
               ))}
             </ul>

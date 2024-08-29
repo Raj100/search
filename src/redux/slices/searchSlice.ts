@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../store';
 
 interface SearchState {
-  results: any[];  // Define the structure of the search results based on API response
+  results: any[];
   loading: boolean;
   error: string | null;
 }
@@ -37,13 +37,13 @@ export const { setLoading, setResults, setError } = searchSlice.actions;
 export const fetchSearchResults = (query: string): AppThunk => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetch(`https://www.weatherunion.com/?q=${query}`);
+    const response = await fetch(`/api/search/?q=${query}`);
     if (!response.ok) {
       throw new Error("Failed to fetch search results");
     }
     const data = await response.json();
     dispatch(setResults(data));
-  } catch (error) {
+  } catch (error: any) {
     dispatch(setError(error.message));
   }
 };
