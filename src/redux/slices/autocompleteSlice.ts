@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../store';
+import { Suggestions } from '../../../types';
 
 interface AutocompleteState {
-  suggestions: Suggestion[];
+  suggestions: Suggestions[];
   loading: boolean;
 }
 
@@ -15,7 +16,7 @@ const autocompleteSlice = createSlice({
   name: 'autocomplete',
   initialState,
   reducers: {
-    setSuggestions: (state, action: PayloadAction<string[]>) => {
+    setSuggestions: (state, action: PayloadAction<Suggestions[]>) => {
       state.suggestions = action.payload;
       state.loading = false;
     },

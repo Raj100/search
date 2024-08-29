@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../store';
+// import { resultstype } 
 
 interface SearchState {
-  results: any[];
+  results: any;
   loading: boolean;
   error: string | null;
 }
