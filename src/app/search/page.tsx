@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSearchResults } from '@/redux/slices/searchSlice';
+import { fetchSearchResults ,setQuery} from '@/redux/slices/searchSlice';
 import { RootState, AppDispatch } from '@/redux/store';
 import googleLogo from '../../assets/images/GoogleLogo.png';
 import profileIcon from '../../assets/images/ProfileLogo.png';
@@ -20,6 +20,11 @@ const SearchPage: React.FC = () => {
   const theme = useSelector((state: RootState) => state.theme.theme);
   const suggestions = useSelector((state: RootState) => state.autocomplete.suggestions);
   const router = useRouter();
+  const query=useSelector((state: RootState) => state.search.searchQuery);
+
+  useEffect(() => {
+    setInputValue(query);
+  }, [query]);
 
   useEffect(() => {
     document.documentElement.classList.add(theme);
@@ -42,6 +47,7 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
+      dispatch(setQuery(inputValue));
       router.push(`/search?q=${encodeURIComponent(inputValue.trim())}`);
     }
   };
@@ -55,7 +61,7 @@ const SearchPage: React.FC = () => {
   const handleSuggestionClick = (suggestion: Suggestions) => {
     setInputValue(suggestion?.name);
     dispatch(setSuggestions([]));
-    router.push(`/search?q=${encodeURIComponent(suggestion?.name)}`);
+    router.push(`/search?q=${encodeURIComponent(suggestion?.name)}&id=${encodeURIComponent(suggestion?.id)}`);
   };
 
   return (

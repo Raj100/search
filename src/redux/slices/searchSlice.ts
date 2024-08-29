@@ -6,12 +6,16 @@ interface SearchState {
   results: any;
   loading: boolean;
   error: string | null;
+  searchQuery: string;
+  id: string;
 }
 
 const initialState: SearchState = {
   results: [],
   loading: false,
   error: null,
+  searchQuery: '',
+  id: '',
 };
 
 const searchSlice = createSlice({
@@ -30,10 +34,16 @@ const searchSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    setQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
+    setId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
+    },
   },
 });
 
-export const { setLoading, setResults, setError } = searchSlice.actions;
+export const { setLoading, setResults, setError, setQuery } = searchSlice.actions;
 
 export const fetchSearchResults = (query: string): AppThunk => async (dispatch) => {
   try {

@@ -41,6 +41,7 @@ const Home: React.FC = () => {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
+      
       router.push(`/search?q=${encodeURIComponent(inputValue.trim())}&id=${encodeURIComponent(id)}`);
     }
   };
