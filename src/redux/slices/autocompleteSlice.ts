@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../store';
 
 interface AutocompleteState {
-  suggestions: string[];
+  suggestions: Suggestion[];
   loading: boolean;
 }
 

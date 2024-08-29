@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import googleLogo from "../assets/images/GoogleLogo.png";
+import googleLogo from '../assets/images/GoogleLogo.png';
 import Navbar from '@/components/Navbar/Navbar';
-import Footer from "../components/Footer/Footer";
+import Footer from '../components/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchSuggestions, setSuggestions } from '../redux/slices/autocompleteSlice';
 import { RootState, AppDispatch } from '../redux/store';
+import { Suggestion } from '../redux/slices/autocompleteSlice';
 
 const Home: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
-  const suggestions = useSelector((state: RootState) => state.autocomplete.suggestions);
+  const suggestions = useSelector((state: RootState) => state.autocomplete.suggestions) as Suggestion[];
   const loading = useSelector((state: RootState) => state.autocomplete.loading);
   const router = useRouter();
 
@@ -29,16 +30,16 @@ const Home: React.FC = () => {
     setInputValue(e.target.value);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = (suggestion: Suggestion) => {
     setInputValue(suggestion.name);
     dispatch(setSuggestions([]));
     router.push(`/search?q=${encodeURIComponent(suggestion.name)}&id=${encodeURIComponent(suggestion.id)}`);
   };
 
   const handleSearch = () => {
-    if (inputValue.trim()) {
-      router.push(`/search?q=${encodeURIComponent(inputValue.trim())}&id=${encodeURIComponent(suggestion.id)}`);
-    }
+    const matchedSuggestion = suggestions.find(suggestion => suggestion.name === inputValue);
+    const locationId = matchedSuggestion ? matchedSuggestion.id : '';
+    router.push(`/search?q=${encodeURIComponent(inputValue.trim())}&id=${encodeURIComponent(locationId)}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
