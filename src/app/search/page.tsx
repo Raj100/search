@@ -61,6 +61,8 @@ const SearchPage: React.FC = () => {
   const handleSuggestionClick = (suggestion: Suggestions) => {
     setInputValue(suggestion?.name);
     dispatch(setSuggestions([]));
+    dispatch(fetchSearchResults(suggestion?.id));
+
     router.push(`/search?q=${encodeURIComponent(suggestion?.name)}&id=${encodeURIComponent(suggestion?.id)}`);
   };
 
