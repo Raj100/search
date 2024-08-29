@@ -9,7 +9,7 @@ import Footer from '../components/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchSuggestions, setSuggestions } from '../redux/slices/autocompleteSlice';
 import { RootState, AppDispatch } from '../redux/store';
-import { Suggestion } from '../redux/slices/autocompleteSlice';
+// import { Suggestion } from '../redux/slices/autocompleteSlice';
 
 const Home: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
